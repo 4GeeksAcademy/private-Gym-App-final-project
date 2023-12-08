@@ -107,6 +107,7 @@ def sing_user():
     user_from_db = User.query.get(user_validation)
 
     if user_validation:
+        
         return jsonify({
             'msg': 'success',
             'user_id': user_from_db.id,
