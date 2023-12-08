@@ -10,6 +10,8 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from datetime import timedelta
 
 # from models import Person
 
@@ -66,6 +68,10 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
+jwt = JWTManager(app)
+app.config["JWT_SECRET_KEY"] = "KCMzbECOh3RdcARVUPPMTeVRd"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=20)
 
 
 # this only runs if `$ python src/main.py` is executed
