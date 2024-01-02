@@ -68,39 +68,38 @@ def all():
     # return jsonify(params)
 
 
-@api.route('/singup', methods=['POST'])
-def create_user():
+@api.route('/signup', methods=['POST'])
+
+def create_one_user():    
     email = request.json.get('email')
-    password= request.json.get('password')
-    first_name= request.json.get('first_name')
-    last_name= request.json.get('last_name')
-    user_exist_db = User.query.filter_by(email = email).first()
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return jsonify({'error': 'Email already exists.'}), 409
+    
+    body = request.json
+    raw_password = request.json.get('password')
+    password_hash = bcrypt.generate_password_hash(raw_password).decode('utf-8')
+    new_user = User(
+        first_name  = body["first_name"],
+        last_name  = body["last_name"],
+        date_of_birth = body["date_of_birth"],
+        email = body["email"],
+        pathologies = body["pathologies"],
+        password = password_hash
+        )
+    db.session.add(new_user)
+    db.session.commit()
 
-    if user_exist_db:
-        return jsonify({"msg": "this user already exist"}), 400
+    ok_to_share = {
+        "first_name" : body["first_name"],
+        "last_name" : body["last_name"],
+        "date_of_birth" : body["date_of_birth"],
+        "email" : body["email"],
+        "pathologies" : body["pathologies"],
+        "password" : body["password"]
+        }
 
-    if email and password:
-
-        encrypted_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(
-            email = email,
-            password= encrypted_password,
-            first_name= first_name,
-            last_name= last_name
-            )
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        return jsonify({
-           "id" : new_user.id,
-           "email" : new_user.email,
-           "msg" : "success"
-
-        }), 200
-
-    else :
-        return jsonify({'msg' : 'the email and password are required'}), 400
+    return jsonify({"msg": "success", "user_added": ok_to_share }), 200
 
 
 @api.route('/login', methods=['POST'])
@@ -122,7 +121,7 @@ def get_token():
 
             return jsonify({
                 'access_token': access_token,
-                'status': 'success',
+                'msg': 'success',
                 }), 200
 
         else:
@@ -143,7 +142,8 @@ def sing_user():
             'user_id': user_from_db.id,
             'create_at': user_from_db.create_at,
             'first_name': user_from_db.first_name,
-            'last_name': user_from_db.last_name
+            'last_name': user_from_db.last_name,
+            'email': user_from_db.email
             }), 200
 
     else:
@@ -197,6 +197,8 @@ def resetPass():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
 
 
 

@@ -3,16 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
-import { Home } from "./pages/home";
-import { Demo } from "./pages/demo";
-import { Single } from "./pages/single";
+import Home  from "../../views/Home.jsx";
+import User  from "../../views/User.jsx";
+import { CaloriesCalculator }  from "../../views/CaloriesCalculator.jsx";
 import injectContext from "./store/appContext";
+import { Footer } from "./component/Footer.jsx";
+import { Login } from "./pages/Login.jsx";
+import { SignUp } from "./pages/SignUp.jsx";
 
-import { Navbar } from "./component/navbar";
-import { Footer } from "./component/footer";
-
-
-import { ResetPassword } from "./pages/ResetPassword.jsx";
 
 //create your first component
 const Layout = () => {
@@ -26,14 +24,14 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
-                        <Route element={<Demo />} path="/demo" />
-                        <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<ResetPassword />} path="/resetpassword" />
-                        <Route element={<h1>Not found!</h1>} path="*" />
-
+                        <Route element={<Home />} path="/home" />
+                        <Route element={<User />} path="/user" />                        
+                        <Route element={<Login />} path="/login" />                        
+                        <Route element={<SignUp />} path="/signup" />
+                        <Route element={<CaloriesCalculator />} path="/user/calculate" />     
+                        <Route element={<h1>Not found!</h1>} path="/*"  />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
