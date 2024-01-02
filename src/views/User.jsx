@@ -12,7 +12,7 @@ const User = () => {
 
     useEffect(() => {
         actions.privateViewRequest()
-        if (!sessionStorage.access_token || sessionStorage.access_token.length == 0 ) {
+        if (!sessionStorage.access_token || sessionStorage.access_token.length == 0 || store.msg == "success") {
             navigate('/')
         }
 
@@ -21,7 +21,7 @@ const User = () => {
     return (
         <div>
             <Navbar_User />
-            <user className="">
+            
                 <div className={style.main}>
                     <div className={style.main__container}>
 
@@ -62,7 +62,7 @@ const User = () => {
                         </div>
                     </div>
                 </div>
-            </user >
+            
         </div>
     )
 }

@@ -36,7 +36,8 @@ export const SignUp = () => {
                 first_name: firstName,
                 last_name: lastName,
                 pathologies: "pathologiesgdfg",
-                date_of_birth: "1151515"
+                date_of_birth: "1151515",
+                role: "user"
 
 
             }
@@ -57,29 +58,29 @@ export const SignUp = () => {
                 <h4>Home Page</h4>
             </Link>
             {
-                <div>
+                <div className="m-5">
                     <h1>Sing Up</h1>
 
                     {msg.length == 0 ? ""
                         : <div class="alert alert-danger" role="alert">{msg}</div>}
 
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="floatingInput" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} ></input>
+                        <input type="text" className="form-control"  placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} ></input>
                         <label for="floatingPassword">First Name</label>
                     </div>
 
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="floatingInput" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} ></input>
+                        <input type="text" className="form-control" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} ></input>
                         <label for="floatingPassword">Last Name</label>
                     </div>
 
                     <div className="form-floating mb-3">
-                        <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required ></input>
+                        <input type="email" className="form-control" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required ></input>
                         <label for="floatingInput">Email address</label>
                     </div>
 
                     <div className="form-floating mb-3">
-                        <input type="password" className="form-control" id="floatingPassword" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} ></input>
+                        <input type="password" className="form-control"  placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} ></input>
                         <label for="floatingPassword">Password</label>
                     </div>
 

@@ -4,6 +4,9 @@ import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
 import Home  from "../../views/Home.jsx";
+import { AdminView }  from "../../views/AdminView.jsx";
+import { AdminUser }  from "../../views/AdminUser.jsx";
+import { AdminTrainer }  from "../../views/AdminTrainer.jsx";
 import User  from "../../views/User.jsx";
 import { CaloriesCalculator }  from "../../views/CaloriesCalculator.jsx";
 import injectContext from "./store/appContext";
@@ -30,6 +33,9 @@ const Layout = () => {
                         <Route element={<User />} path="/user" />                        
                         <Route element={<Login />} path="/login" />                        
                         <Route element={<SignUp />} path="/signup" />
+                        <Route element={<AdminView />} path="/admin" />
+                        <Route element={<AdminUser />} path="/admin/users" />
+                        <Route element={<AdminTrainer />} path="/admin/Trainer" />
                         <Route element={<CaloriesCalculator />} path="/user/calculate" />     
                         <Route element={<h1>Not found!</h1>} path="/*"  />
                     </Routes>

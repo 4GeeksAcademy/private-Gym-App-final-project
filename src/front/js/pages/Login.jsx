@@ -15,9 +15,20 @@ export const Login = () => {
     }
     
     useEffect(() => {
-        if (store.loginRes == "success") {
-            navigate('/user')            
+        if (store.loginRes == "success" && store.role == "admin") {
+            navigate('/admin')            
+            
         }
+        if (store.loginRes == "success" && store.role == "user") {
+            navigate('/user')            
+            
+        }
+        if (store.loginRes == "success" && store.role == "trainer") {
+            navigate('/trainer')            
+            
+        }
+
+
     }, [store.loginRes])
 
     return (    

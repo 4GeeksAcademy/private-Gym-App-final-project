@@ -18,7 +18,7 @@ export const CaloriesCalculator = () => {
 
     useEffect(() => {
         actions.privateViewRequest()
-        if (!sessionStorage.access_token || sessionStorage.access_token.length == 0) {
+        if (!sessionStorage.access_token || sessionStorage.access_token.length == 0 || store.msg != "success") {
             navigate('/')
         }
 

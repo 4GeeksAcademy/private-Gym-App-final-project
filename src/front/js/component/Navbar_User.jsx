@@ -28,6 +28,7 @@ export const Navbar_User = () => {
                                 <a className={style.navbar__links}>Routines</a>
                             </Link>
                         </li>
+                        
                         <li className={style.navbar__item}>
                             <Link to="/user/diets" className={style.link}>
                                 <a className={style.navbar__links}>Diets</a>
