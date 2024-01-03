@@ -10,7 +10,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			role: '',
 			adminUserData: "",
 			adminTrainerData: "",
-			newTrainerRes: ""
+			newTrainerRes: "",
+			loginTrainerRes: ""
 		},
 		actions: {
 			logout: () => {
@@ -47,7 +48,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 						
 						setStore({ store: store.loginRes = data.msg})
 						setStore({store: store.role = data.role})
-						console.log(store.role)
+						//console.log(store.loginRes)
+					})
+					.catch((error) => {
+						console.error("There was an error", error);
+
+					});
+			},
+			trainerLogIn: async (email, password) => {
+				const store = getStore()
+				const opts = {
+					method: "POST",
+					headers: {
+						"Content-type": "application/json",
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password,
+					}),
+				};
+				await fetch(process.env.BACKEND_URL + "/api/login/trainer", opts)
+					.then((resp) => {
+						if (resp.status === 200) return resp.json();
+					})
+					.then((data) => {
+						sessionStorage.setItem("access_token", data.access_token);
+						
+						setStore({ store: store.loginTrainerRes = data.msg})
+						setStore({store: store.role = data.role})
+						//console.log(store.loginRes)
 					})
 					.catch((error) => {
 						console.error("There was an error", error);

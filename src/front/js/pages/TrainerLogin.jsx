@@ -3,39 +3,36 @@ import { Context } from "../store/appContext";
 import { Link, useNavigate } from 'react-router-dom'
 
 
-export const Login = () => {
+export const TrainerLogin = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
-    const [userEmail, setUserEmail] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
 
 
     const sendLoginForm = () => {
-        if (password.length < 6 || !userEmail.includes("@gmail.com") || userEmail.length < 11) {
+        if (password.length < 6 || !email.includes("@gmail.com") || email.length < 11) {
             setMsg("Please fill both inputs correctly")
 
         }
         else {
-            actions.logIn(userEmail, password)
+            actions.trainerLogIn(email, password)
         }
     }
 
     useEffect(() => {
-        if (store.loginRes == "success" && store.role == "admin") {
-            navigate('/admin')
-        }
 
-        if (store.loginRes == "success" && store.role == "user") {
-            navigate('/user')
+        if (store.loginTrainerRes == "success" && store.role == "trainer") {
+            navigate('/trainer')
 
         }
 
-        if (store.loginRes == "Incorrect password"){
+        if (store.loginTrainerRes == "Incorrect password"){
             setMsg("Incorrect password or email")
         }
 
-    }, [store.loginRes])
+    }, [store.loginTrainerRes])
 
     return (
 
@@ -48,7 +45,7 @@ export const Login = () => {
                 <div className='col-md-3 m-auto mt-5 p-5 border border-danger-subtle'>
 
                     <div className="form-floating mb-3">
-                        <input type="email" className="form-control" id="email" placeholder="name@example.com" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} />
+                        <input type="email" className="form-control" id="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
                         <label>Email address</label>
                     </div>
                     <div className="form-floating mb-3">

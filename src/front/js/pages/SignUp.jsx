@@ -15,11 +15,11 @@ export const SignUp = () => {
 
     }, [store.newUserRes])
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [msg, setMsg] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [msg, setMsg] = useState("");
 
     const sendForm = () => {
         let emailInput = email
@@ -61,8 +61,7 @@ export const SignUp = () => {
                 <div className="m-5">
                     <h1>Sing Up</h1>
 
-                    {msg.length == 0 ? ""
-                        : <div class="alert alert-danger" role="alert">{msg}</div>}
+                    {msg.length == 0 ? "": <div class="alert alert-danger" role="alert">{msg}</div>}
 
                     <div className="form-floating mb-3">
                         <input type="text" className="form-control"  placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} ></input>

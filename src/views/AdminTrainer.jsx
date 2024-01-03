@@ -8,15 +8,20 @@ export const AdminTrainer = () => {
     const { store, actions } = useContext(Context);
 
     useEffect(() => {
-        actions.getAllTrainers()
 
-    }, [])
+        actions.getAllTrainers()
+        if(store.newTrainerRes == "Email already exists."){
+            setMsg("Email already exists.")
+        }
+
+    }, [store.newTrainerRes.length])
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
     const [msg, setMsg] = useState("")
+    const [data, setData] = useState('')
 
     const sendForm = () => {
         let emailInput = email
@@ -42,6 +47,8 @@ export const AdminTrainer = () => {
             actions.createNewTrainer(newTrainer)
             setEmail('')
             setPassword('')
+            setFirstName('')
+            setLastName('')
 
 
         }
@@ -107,7 +114,6 @@ export const AdminTrainer = () => {
                         </div>
                         <div class="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Understood</button>
                         </div>
                     </div>
                 </div>

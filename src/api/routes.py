@@ -153,7 +153,36 @@ def get_token():
                 }), 200
 
         else:
-            return {"Error": "Incorrect password"}
+            return {"msg": "Incorrect password"}
+
+    except Exception as e:
+        return {"error": f"this email not exist: {str(e)}"}, 500
+    
+@api.route('/login/trainer', methods=['POST'])
+def get_token_trainer():
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+
+        if not email or not password:
+            return jsonify({'error': 'Email and password are required.'}), 400
+
+        email_from_db = Trainer.query.filter_by(email= email).first()
+
+        password_from_db = email_from_db.password
+        true_o_false = bcrypt.check_password_hash(password_from_db, password)
+
+        if true_o_false:
+            access_token = create_access_token(identity= email_from_db.id)
+
+            return jsonify({
+                'access_token': access_token,
+                'msg': 'success',
+                "role": email_from_db.role
+                }), 200
+
+        else:
+            return {"msg": "Incorrect password"}
 
     except Exception as e:
         return {"error": f"this email not exist: {str(e)}"}, 500
@@ -265,7 +294,7 @@ def create_trainer():
     email = request.json.get('email')
     existing_trainer = Trainer.query.filter_by(email=email).first()
     if existing_trainer:
-        return jsonify({'error': 'Email already exists.'}), 409
+        return jsonify({'msg': 'Email already exists.'}), 409
     
     body = request.json
     raw_password = request.json.get('password')

@@ -12,6 +12,7 @@ import { CaloriesCalculator }  from "../../views/CaloriesCalculator.jsx";
 import injectContext from "./store/appContext";
 import { Footer } from "./component/Footer.jsx";
 import { Login } from "./pages/Login.jsx";
+import { TrainerLogin } from "./pages/TrainerLogin.jsx";
 import { SignUp } from "./pages/SignUp.jsx";
 
 
@@ -31,7 +32,8 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Home />} path="/home" />
                         <Route element={<User />} path="/user" />                        
-                        <Route element={<Login />} path="/login" />                        
+                        <Route element={<Login />} path="/login" />        
+                        <Route element={<TrainerLogin />} path="/login/trainer" />                   
                         <Route element={<SignUp />} path="/signup" />
                         <Route element={<AdminView />} path="/admin" />
                         <Route element={<AdminUser />} path="/admin/users" />
