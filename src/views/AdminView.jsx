@@ -9,9 +9,12 @@ export const AdminView = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-      
+        actions.privateViewRequest()
+        if(store.privateRes === true || sessionStorage.access_token == ""){
+            navigate('/')
+        }
 
-    }, [])
+    }, [store.privateRes])
 
 
 

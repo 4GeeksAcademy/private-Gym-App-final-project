@@ -9,11 +9,13 @@ import { AdminUser }  from "../../views/AdminUser.jsx";
 import { AdminTrainer }  from "../../views/AdminTrainer.jsx";
 import User  from "../../views/User.jsx";
 import { CaloriesCalculator }  from "../../views/CaloriesCalculator.jsx";
+import { TrainerHome }  from "../../views/TrainerHome.jsx";
 import injectContext from "./store/appContext";
 import { Footer } from "./component/Footer.jsx";
 import { Login } from "./pages/Login.jsx";
 import { TrainerLogin } from "./pages/TrainerLogin.jsx";
 import { SignUp } from "./pages/SignUp.jsx";
+import { UserRoutines } from "./pages/UserRoutines.jsx";
 
 
 //create your first component
@@ -38,6 +40,8 @@ const Layout = () => {
                         <Route element={<AdminView />} path="/admin" />
                         <Route element={<AdminUser />} path="/admin/users" />
                         <Route element={<AdminTrainer />} path="/admin/Trainer" />
+                        <Route element={<UserRoutines />} path="/user/routine" />
+                        <Route element={<TrainerHome />} path="/trainer" />   
                         <Route element={<CaloriesCalculator />} path="/user/calculate" />     
                         <Route element={<h1>Not found!</h1>} path="/*"  />
                     </Routes>

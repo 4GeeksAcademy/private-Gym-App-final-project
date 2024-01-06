@@ -6,11 +6,16 @@ import style from '../../src/front/styles/User.module.css'
 
 export const AdminUser = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate()
 
     useEffect(() => {
-        actions.getAllUsers()
 
-    }, [])
+        actions.getAllUsers()
+        if(store.privateRes === true){
+            navigate('/')
+        }
+
+    }, [store.privateRes])
 
 
 

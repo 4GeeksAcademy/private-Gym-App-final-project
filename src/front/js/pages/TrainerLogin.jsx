@@ -41,6 +41,8 @@ export const TrainerLogin = () => {
         <div className='container-fluid'>
             {msg.length == 0 ? "" : <div class="alert alert-danger" role="alert">{msg}</div>}
 
+            <h1 className='text-center'>Login For Trainers</h1>
+
             <div className='row'>
                 <div className='col-md-3 m-auto mt-5 p-5 border border-danger-subtle'>
 
@@ -53,10 +55,6 @@ export const TrainerLogin = () => {
                         <label>Password</label>
                     </div>
                     <button className="btn btn-dark" onClick={() => sendLoginForm()}>Submit</button>
-
-                    <div className='m-3'>
-                        <Link className='text-danger' to="/signup">Enter here to register!</Link>
-                    </div>
                 </div>
             </div>
         </div>

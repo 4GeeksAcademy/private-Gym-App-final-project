@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 import resend
 import os
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trainer
+from api.models import db, User, Trainer, Routines
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -40,7 +40,10 @@ url_front = "https://potential-journey-wrg5rvjrj543vj7-3000.app.github.dev/"
 
 
 @api.route('/all', methods=['GET'])
+@jwt_required()
+
 def all():
+    user_validation = get_jwt_identity()
     query = User.query.all()
     all_users = [{
         'first_name': user.first_name,
@@ -61,6 +64,7 @@ def all():
     return jsonify(all_users)
 
 @api.route('/all/trainers', methods=['GET'])
+@jwt_required()
 def all_trainers():
     query = Trainer.query.all()
     all_trainers = [{
@@ -69,12 +73,9 @@ def all_trainers():
         'email': trainer.email,
         'id': trainer.id,
         'role': trainer.role,
-        'create_at': trainer.create_at,
-        
+        'create_at': trainer.create_at    
 
     } for trainer in query]
-
-
     if len(all_trainers) == 0:
         
         return jsonify({'msg': 'no trainers in db :('})
@@ -189,7 +190,7 @@ def get_token_trainer():
 
 @api.route('/private')
 @jwt_required()
-def sing_user():
+def private_data():
     user_validation = get_jwt_identity()
     user_from_db = User.query.get(user_validation)
 
@@ -207,22 +208,22 @@ def sing_user():
         return jsonify({"msg": 'token no valido o inexistente'}), 401
 
 
-@api.route('/edit', methods=['PUT'])
-def editUser():
-    query = User.query.all()
-    all_users = [{
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'email': user.email,
-        'password': user.password,
-        'id': user.id
+#@api.route('/edit', methods=['PUT'])
+#def editUser():
+#   query = User.query.all()
+#    all_users = [{
+#       'first_name': user.first_name,
+#        'last_name': user.last_name,
+#        'email': user.email,
+#        'password': user.password,
+#       'id': user.id
 
-    } for user in query]
+#    } for user in query]
 
-    if len(all_users) == 0:
-        return jsonify({'msg': 'no users in db :('})
+#    if len(all_users) == 0:
+#        return jsonify({'msg': 'no users in db :('})
 
-    return all_users
+#    return all_users
 
 
 @api.route('/resetpass', methods=['POST'])
@@ -256,13 +257,14 @@ def resetPass():
         return jsonify({"error": str(e)}), 500
     
 @api.route('/user/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_user(id):
 
     user_exist_db = User.query.filter_by(id = id).first()
 
     if user_exist_db :
         db.session.delete(user_exist_db)
-        #db.session.commit()
+        db.session.commit()
 
         return jsonify({
             'msg': 'success'
@@ -273,6 +275,7 @@ def delete_user(id):
         }),500
     
 @api.route('/trainer/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_trainer(id):
 
     trainer_exist_db = Trainer.query.filter_by(id = id).first()
@@ -316,8 +319,64 @@ def create_trainer():
         "password" : body["password"],
         "msg": "success"
         }
-
+    
     return jsonify(ok_to_share), 200
+
+@api.route('/assign/routine', methods=['POST'])
+def assign_routine():
+
+    chest = request.json.get('chest')
+    shoulders = request.json.get('shoulders')
+    arms = request.json.get('arms')
+    legs = request.json.get('legs')
+   
+    if not chest or not shoulders or not arms or not legs:
+        return jsonify({'msg': 'fill all inputs'}), 400    
+    
+    new_routine = Routines(
+        Chest = request.json.get('chest'),
+        shoulders = request.json.get('shoulders'),
+        arms = request.json.get('arms'),
+        legs = request.json.get('legs'),
+        id_user = request.json.get('id_user'),
+        id_trainer = request.json.get('id_trainer')
+        )
+    db.session.add(new_routine)
+    db.session.commit()
+    return jsonify({'msg': 'success'}), 200
+
+@api.route('/get/routine', methods=['GET'])
+@jwt_required()
+def get_one_routine():
+    user_validation = get_jwt_identity()
+    user_from_db = User.query.get(user_validation)
+
+
+    if not user_from_db:
+        return ({"msg": "user not exist"})
+
+    routine = Routines.query.filter_by(id_user = user_from_db.id).first()
+
+    if not routine:
+        return jsonify({"msg": "no routine yet",
+                        "status": True
+                        }), 200
+    
+
+    return jsonify({"chest": routine.Chest,
+                    "trainer_first_name": Trainer.query.filter_by(id = routine.id_trainer).first().first_name,
+                    "trainer_last_name": Trainer.query.filter_by(id = routine.id_trainer).first().last_name,
+                    "shoulders": routine.shoulders,
+                    "legs": routine.legs,
+                    "arms": routine.arms,
+                    "msg": "success",
+                    "status": True
+
+                    }), 200
+
+
+
+
 
 
 

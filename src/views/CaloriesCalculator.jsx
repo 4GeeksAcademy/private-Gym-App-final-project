@@ -15,10 +15,11 @@ export const CaloriesCalculator = () => {
     const [activityValue, setActivityValue] = useState(0)
     const [loseWeightValue, setLoseWeightValue] = useState(0)
     const [gainWeightValue, setGainWeightValue] = useState(0)
+    const [message, setMessage] = useState("")
 
     useEffect(() => {
         actions.privateViewRequest()
-        if (!sessionStorage.access_token || sessionStorage.access_token.length == 0 || store.msg != "success") {
+        if (store.privateRes === true) {
             navigate('/')
         }
 
@@ -27,22 +28,28 @@ export const CaloriesCalculator = () => {
             setLoseWeightValue(result - 300)
         }
 
-    }, [result])
+    }, [result, store.privateRes])
 
 
 
 
     const calculate = () => {
 
-        if (genderValue == "male") {
-            setResult(Math.round((((Number(weight) * 10) + (Number(height) * 6.25) - (Number(age) * 5) + 5) * activityValue)))
+        if (height == "" || weight == "" || age == "" || genderValue == 0 || activityValue == 0) {
+            setMessage('select and fill all inputs')
+            console.log(height, weight, age, genderValue, activityValue)
+        }
 
+        if (genderValue == "male" ) {
+            setResult(Math.round((((Number(weight) * 10) + (Number(height) * 6.25) - (Number(age) * 5) + 5) * activityValue)))
+            setMessage("")
         }
 
         if (genderValue == "female") {
             setResult(Math.round((((Number(weight) * 10) + (Number(height) * 6.25) - (Number(age) * 5) - 161) * activityValue)))
+            setMessage("")
         }
- 
+
 
     }
 
@@ -53,6 +60,8 @@ export const CaloriesCalculator = () => {
 
             <div className="p-5">
                 <h1><b>calculate your calories!</b></h1>
+
+                { message.length == 0 ? "" : <div class="alert alert-danger" role="alert">{message}</div> }
 
                 <select className="form-select form-select-lg mb-3" onChange={(e) => setGenderValue(e.target.value)}>
                     <option selected value={0}>Select your gender</option>
@@ -71,12 +80,12 @@ export const CaloriesCalculator = () => {
 
                 <div className="form-floating mb-3">
                     <input type="number" className="form-control" placeholder="First Name" value={height} onChange={(e) => setHeight(e.target.value)} ></input>
-                    <label for="floatingPassword">Height</label>
+                    <label for="floatingPassword">Height (centimeters)</label>
                 </div>
 
                 <div className="form-floating mb-3">
                     <input type="number" className="form-control" placeholder="First Name" value={weight} onChange={(e) => setweight(e.target.value)} ></input>
-                    <label for="floatingPassword">Weight</label>
+                    <label for="floatingPassword">Weight (KG)</label>
                 </div>
 
                 <div className="form-floating mb-3">
@@ -87,7 +96,7 @@ export const CaloriesCalculator = () => {
                 <button type="button" className="btn btn-secondary m-3 p-2 w-25" onClick={() => calculate()} ><b>Calculate</b></button>
 
 
-                { result == 0 ? "" :
+                {result == 0 ? "" :
                     <div className="alert alert-success" role="alert">
 
                         <h1> Calories for maintain your weight: {result}</h1>

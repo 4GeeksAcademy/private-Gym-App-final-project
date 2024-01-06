@@ -10,7 +10,7 @@ export const Footer = () => (
                 <div className={style.footer__link__wrapper}>
                     <div className={style.footer__link__items}>
                         <h2>About Us</h2>
-                        <Link to="/careers">
+                        <Link to="/login/trainer">
                         <a>Become a Trainer</a>
                         </Link>
                         <Link to="/policies">
@@ -84,7 +84,7 @@ export const Footer = () => (
                         <a id={style.footer__logo}><i className="fa-solid fa-dumbbell"></i>__GYMApp</a>
                         </Link>
                     </div>
-                    <p className={style.website__rights}><i class="fa-solid fa-copyright"></i>GYMApp 2024. All rights reserved</p>
+                    <p className={style.website__rights}><i className="fa-solid fa-copyright"></i>GYMApp 2024. All rights reserved</p>
                     <div className={style.social__icons}>
                      <Link to= "facebook">
                         <a className={style.social__icon__link} target="_blank">
@@ -103,7 +103,7 @@ export const Footer = () => (
                         </Link>
                         <Link to= "linkedin">
                         <a className={style.social__icon__link} target="_blank">
-                            <i class="fa-brands fa-linkedin"></i>
+                            <i className="fa-brands fa-linkedin"></i>
                         </a>
                         </Link>
                     </div>

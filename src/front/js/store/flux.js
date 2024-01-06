@@ -6,25 +6,34 @@ const getState = ({ getStore, getActions, setStore }) => {
 			isLoggedIn: false,
 			newUserRes: '',
 			privateData: "",
-			loginRes: [],
+			loginRes: "",
 			role: '',
 			adminUserData: "",
 			adminTrainerData: "",
 			newTrainerRes: "",
-			loginTrainerRes: ""
+			loginTrainerRes: "",
+			routineData: "",
+			privateRes: ""
 		},
 		actions: {
 			logout: () => {
 				sessionStorage.removeItem("access_token");
-					setStore({
-						isLoggedIn: false,
-						userData: null,
-						message: null,
-						privateData: "",
-						deleteUserMsg: ""
-						
-					});
-				
+				setStore({
+					message: null,
+					userData: null,
+					isLoggedIn: false,
+					newUserRes: "",
+					privateData: "",
+					loginRes: "",
+					role: "",
+					adminUserData: "",
+					adminTrainerData: "",
+					newTrainerRes: "",
+					loginTrainerRes: "",
+					routineData: "",
+					privateRes: false
+				});
+
 			},
 
 			logIn: async (userEmail, password) => {
@@ -45,9 +54,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.then((data) => {
 						sessionStorage.setItem("access_token", data.access_token);
-						
-						setStore({ store: store.loginRes = data.msg})
-						setStore({store: store.role = data.role})
+
+						setStore({ store: store.loginRes = data.msg })
+						setStore({ store: store.role = data.role })
 						//console.log(store.loginRes)
 					})
 					.catch((error) => {
@@ -73,10 +82,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.then((data) => {
 						sessionStorage.setItem("access_token", data.access_token);
+
+						setStore({ store: store.loginTrainerRes = data.msg })
+						setStore({ store: store.role = data.role })
 						
-						setStore({ store: store.loginTrainerRes = data.msg})
-						setStore({store: store.role = data.role})
-						//console.log(store.loginRes)
 					})
 					.catch((error) => {
 						console.error("There was an error", error);
@@ -92,7 +101,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					await fetch(process.env.BACKEND_URL + "/api/signup", {
 						method: "POST",
 						headers: {
-							
+
 							"Content-type": "application/json",
 						},
 
@@ -108,7 +117,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			privateViewRequest: async () => {
-				if (sessionStorage.access_token) {
+				
 					const store = getStore()
 					await fetch(process.env.BACKEND_URL + "/api/private", {
 						headers: {
@@ -119,49 +128,56 @@ const getState = ({ getStore, getActions, setStore }) => {
 							if (res.status == 200) {
 								return res.json()
 							} else {
+								setStore({ store: store.privateRes = true })
 								throw Error(res.statusText)
 							}
 						})
 						.then((json) => store.privateData = json)
-					setStore({ store: store.privateData })
-					setStore({ store: store.loginRes = [true] })
+						setStore({ store: store.privateData })
 
-				}
+				
 
 			},
 			getAllUsers: async () => {
-				try {
+				
 					const store = getStore()
-					//setStore({ store: store.adminUserData = "" })
 					await fetch(process.env.BACKEND_URL + "/api/all", {
 						headers: {
-							"Content-type": "application/json",
+							Authorization: `Bearer ${sessionStorage.access_token}`
 						}
 					})
-						.then((res) => res.json())
-						.then((json) => setStore({ store: store.adminUserData = json }))
-						
-
-				} catch (error) {
-					console.log("get all users function error==", error)
-				}
+						.then((res) => {
+							if (res.status == 200) { 
+								return res.json()
+							} else {
+								setStore({ store: store.privateRes = true })
+								throw Error(res.statusText)
+								
+							}
+						})
+						.then((json) => setStore({ store: store.adminUserData = json }) )
+				
 			},
 			getAllTrainers: async () => {
-				try {
 					const store = getStore()
 					//setStore({ store: store.adminUserData = "" })
 					await fetch(process.env.BACKEND_URL + "/api/all/trainers", {
 						headers: {
-							"Content-type": "application/json",
+							Authorization: `Bearer ${sessionStorage.access_token}`
 						}
 					})
-						.then((res) => res.json())
+						.then((res) => {
+							if (res.status == 200) { 
+								return res.json()
+							} else {
+								setStore({ store: store.privateRes = true })
+								throw Error(res.statusText)
+								
+							}
+						})
 						.then((json) => setStore({ store: store.adminTrainerData = json }))
-						
 
-				} catch (error) {
-					console.log("get all users function error==", error)
-				}
+				
 			},
 			deleteUser: async (id) => {
 				try {
@@ -175,9 +191,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 						.then((res) => res.json())
 						.then((json) => setStore({ store: store.deleteUserMsg = json.msg }))
-						location.reload(true)
-						console.log(store.deleteUserMsg)
-						
+					location.reload(true)
+					console.log(store.deleteUserMsg)
+
 
 				} catch (error) {
 					console.log("delete user function error==", error)
@@ -186,7 +202,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			deleteTrainer: async (id) => {
 				try {
 					const store = getStore()
-					//setStore({ store: store.adminUserData = "" })
+
 					await fetch(process.env.BACKEND_URL + `/api/trainer/delete/${id}`, {
 						method: "DELETE",
 						headers: {
@@ -195,9 +211,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 						.then((res) => res.json())
 						.then((json) => setStore({ store: store.deleteUserMsg = json.msg }))
-						location.reload(true)
-						console.log(store.deleteUserMsg)
-						
+					location.reload(true)
+					console.log(store.deleteUserMsg)
+
 
 				} catch (error) {
 					console.log("delete user function error==", error)
@@ -210,7 +226,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					await fetch(process.env.BACKEND_URL + "/api/signup/trainer", {
 						method: "POST",
 						headers: {
-							
+
 							"Content-type": "application/json",
 						},
 
@@ -220,13 +236,34 @@ const getState = ({ getStore, getActions, setStore }) => {
 						.then((json) => setStore({ store: store.newTrainerRes = json.msg }))
 
 				} catch (error) {
-					console.log("Create user function error==", error)
+					console.log("Create new trainer function error==", error)
 				}
 
 			},
+			getRoutine: async () => {
+				const store = getStore()
+				await fetch(process.env.BACKEND_URL + "/api/get/routine", {
+					headers: {
+						Authorization: `Bearer ${sessionStorage.access_token}`
+					}
+				})
+					.then((res) => {
+						if (res.status == 200) { 
+							return res.json()
+						} else {
+							setStore({ store: store.privateRes = true })
+							throw Error(res.statusText)
+							
+						}
+					})
+					.then((json) => setStore({ store: store.routineData = json }))
+
+
+
+			}
 
 		}
 	};
-};
+}
 
 export default getState;

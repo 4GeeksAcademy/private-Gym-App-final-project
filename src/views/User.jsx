@@ -11,12 +11,13 @@ const User = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
         actions.privateViewRequest()
-        if (!sessionStorage.access_token || sessionStorage.access_token.length == 0 || store.msg == "success") {
+        if(store.privateRes === true || sessionStorage.access_token == ""){
             navigate('/')
         }
 
-    }, [])
+    }, [store.privateRes])
 
     return (
         <div>
@@ -43,8 +44,8 @@ const User = () => {
                     <h1>Get Your Best Results Now</h1>
                     <div className={style.services__container}>
                         <div className={style.services__card}>
-                            <Link to="/user/routines">
-                                <h2>Your Routines</h2>
+                            <Link to="/user/routine">
+                                <h2>Your Routine</h2>
                                 <p></p>
                             </Link>
                         </div>
@@ -55,8 +56,8 @@ const User = () => {
                             </Link>
                         </div>
                         <div className={style.services__card}>
-                            <Link to="/user/progress">
-                                <h2>Your Progress</h2>
+                            <Link to="/user/calculate">
+                                <h2>Count Calories</h2>
                                 <p></p>
                             </Link>
                         </div>

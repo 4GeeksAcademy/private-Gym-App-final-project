@@ -6,15 +6,21 @@ import style from '../../src/front/styles/User.module.css'
 
 export const AdminTrainer = () => {
     const { store, actions } = useContext(Context);
-
+    const navigate = useNavigate()
+    
     useEffect(() => {
 
         actions.getAllTrainers()
-        if(store.newTrainerRes == "Email already exists."){
+
+        if (store.newTrainerRes == "Email already exists.") {
             setMsg("Email already exists.")
         }
 
-    }, [store.newTrainerRes.length])
+        if(store.privateRes === true){
+            navigate('/')
+        }
+
+    }, [store.newTrainerRes.length, store.privateRes])
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -49,7 +55,6 @@ export const AdminTrainer = () => {
             setPassword('')
             setFirstName('')
             setLastName('')
-
 
         }
     }
