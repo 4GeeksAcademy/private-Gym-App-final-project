@@ -10,7 +10,7 @@ export const TrainerHome = () => {
 
     useEffect(() => {
 
-        actions.getAllUsers()
+        actions.privateViewRequest()
         if(store.privateRes === true){
             navigate('/')
         }
@@ -18,31 +18,26 @@ export const TrainerHome = () => {
     }, [store.privateRes])
 
 
-
     return (
-
-        <div className="container-fluid d-flex ">
-            {store.adminUserData.length == 0 ?
-                <div className="spinner-border text-danger" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div> : store.adminUserData.map((ele, index) =>
-                <div className="bg m-3 card" id={index}>
-                    
-
-                        <div className="card-body " >
-                            <h6 className="card-title"><b>First name</b> {ele.first_name}</h6>
-                            <h6 className="card-text"><b>Last Name</b> {ele.last_name}</h6>
-                            <h6 className="card-text"><b>Email:</b> {ele.email}</h6>
-                            <h6 className="card-text"><b>Since :</b> {ele.create_at}</h6>
-                        </div>
-                        
-                        <div className="card-body text-center">
-                            <button className="btn btn-danger" onClick={()=> actions.deleteUser(ele.id)}>Delete</button>
-                        </div>
-                    </div>
-                    
-                )}
+        
+        <div className={style.services}>
+        <h1>Assign Routine</h1>
+        <div className={style.services__container}>
+            <div className={style.services__card}>
+                <Link to="/trainer/assignroutine">
+                    <h2>Assign Routine</h2>
+                    <p></p>
+                </Link>
+            </div>
+            <div className={style.services__card}>
+                <Link to="/trainer/assigndiet">
+                    <h2>Assign Diet</h2>
+                    <p></p>
+                </Link>
+            </div>
+           
         </div>
-
-    );
+    </div>
+     
+);
 };

@@ -13,7 +13,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			newTrainerRes: "",
 			loginTrainerRes: "",
 			routineData: "",
-			privateRes: ""
+			privateRes: "",
+			setRoutineRes: "",
+			deleteRoutineMsg: "",
+			setDietRes: "",
+			deleteDietMsg: "",
+			dietData: "",
 		},
 		actions: {
 			logout: () => {
@@ -31,7 +36,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					newTrainerRes: "",
 					loginTrainerRes: "",
 					routineData: "",
-					privateRes: false
+					privateRes: false,
+					deleteRoutineMsg: "",
+					setDietRes: "",
+					deleteDietMsg: "",
+					dietData: ""
 				});
 
 			},
@@ -57,7 +66,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 						setStore({ store: store.loginRes = data.msg })
 						setStore({ store: store.role = data.role })
-						//console.log(store.loginRes)
+						setStore({store: store.privateRes = false})
+						
 					})
 					.catch((error) => {
 						console.error("There was an error", error);
@@ -85,6 +95,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 						setStore({ store: store.loginTrainerRes = data.msg })
 						setStore({ store: store.role = data.role })
+						setStore({store: store.privateRes = false})
 						
 					})
 					.catch((error) => {
@@ -199,6 +210,41 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("delete user function error==", error)
 				}
 			},
+			deleteRoutine: async (id) => {
+				try {
+					const store = getStore()
+					await fetch(process.env.BACKEND_URL + `/api/routine/delete/${id}`, {
+						method: "DELETE",
+						headers: {
+							"Content-type": "application/json",
+						}
+					})
+						.then((res) => res.json())
+						.then((json) => setStore({ store: store.deleteRoutineMsg = json.msg }))
+					
+					 
+
+
+				} catch (error) {
+					console.log("delete routine function error==", error)
+				}
+			},
+			deleteDiet: async (id) => {
+				try {
+					const store = getStore()
+					await fetch(process.env.BACKEND_URL + `/api/diet/delete/${id}`, {
+						method: "DELETE",
+						headers: {
+							"Content-type": "application/json",
+						}
+					})
+						.then((res) => res.json())
+						.then((json) => setStore({ store: store.deleteDietMsg = json.msg }))
+					
+				} catch (error) {
+					console.log("delete diet function error==", error)
+				}
+			},
 			deleteTrainer: async (id) => {
 				try {
 					const store = getStore()
@@ -260,7 +306,68 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 
-			}
+			},
+			assignRoutine: async (routine)=> {
+				const store = getStore()
+				await fetch(process.env.BACKEND_URL + "/api/assign/routine", {
+					method: "POST",
+					body: JSON.stringify(routine),
+					headers: { 
+						Authorization: `Bearer ${sessionStorage.access_token}`,
+						"Content-type": "application/json"
+					}
+				})
+					.then((res) => {
+						if (res.status == 200) { 
+							return res.json()
+						} else {
+							throw Error(res.statusText)
+							
+						}
+					})
+					.then((json) => setStore({ store: store.setRoutineRes = json }))
+			},
+			assignDiet: async (diet)=> {
+				const store = getStore()
+				await fetch(process.env.BACKEND_URL + "/api/assign/diet", {
+					method: "POST",
+					body: JSON.stringify(diet),
+					headers: { 
+						Authorization: `Bearer ${sessionStorage.access_token}`,
+						"Content-type": "application/json"
+					}
+				})
+					.then((res) => {
+						if (res.status == 200) { 
+							return res.json()
+						} else {
+							throw Error(res.statusText)
+							
+						}
+					})
+					.then((json) => setStore({ store: store.setDietRes = json }))
+			},
+
+			getOneDiet : async (userId) =>{
+				const store = getStore()
+				await fetch(process.env.BACKEND_URL + `/api/get/diet/${userId}`, {
+					headers: {
+						Authorization: `Bearer ${sessionStorage.access_token}`
+					}
+				})
+					.then((res) => {
+						if (res.status == 200) { 
+							return res.json()
+						} else {
+							setStore({ store: store.privateRes = true })
+							throw Error(res.statusText)
+							
+						}
+					})
+					.then((json) => setStore({ store: store.dietData = json }))
+
+			},
+
 
 		}
 	};

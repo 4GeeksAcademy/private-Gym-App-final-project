@@ -10,6 +10,8 @@ import { AdminTrainer }  from "../../views/AdminTrainer.jsx";
 import User  from "../../views/User.jsx";
 import { CaloriesCalculator }  from "../../views/CaloriesCalculator.jsx";
 import { TrainerHome }  from "../../views/TrainerHome.jsx";
+import { TrainerAssignRoutine }  from "../../views/TrainerAssignRoutine.jsx";
+import { TrainerAssignDiet }  from "../../views/TrainerAssignDiet.jsx";
 import injectContext from "./store/appContext";
 import { Footer } from "./component/Footer.jsx";
 import { Login } from "./pages/Login.jsx";
@@ -42,6 +44,8 @@ const Layout = () => {
                         <Route element={<AdminTrainer />} path="/admin/Trainer" />
                         <Route element={<UserRoutines />} path="/user/routine" />
                         <Route element={<TrainerHome />} path="/trainer" />   
+                        <Route element={<TrainerAssignRoutine />} path="/trainer/assignroutine" />   
+                        <Route element={<TrainerAssignDiet />} path="/trainer/assigndiet" />   
                         <Route element={<CaloriesCalculator />} path="/user/calculate" />     
                         <Route element={<h1>Not found!</h1>} path="/*"  />
                     </Routes>

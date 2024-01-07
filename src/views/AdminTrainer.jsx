@@ -7,7 +7,7 @@ import style from '../../src/front/styles/User.module.css'
 export const AdminTrainer = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate()
-    
+
     useEffect(() => {
 
         actions.getAllTrainers()
@@ -16,7 +16,7 @@ export const AdminTrainer = () => {
             setMsg("Email already exists.")
         }
 
-        if(store.privateRes === true){
+        if (store.privateRes === true) {
             navigate('/')
         }
 

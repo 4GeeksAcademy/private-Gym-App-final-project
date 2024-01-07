@@ -14,8 +14,6 @@ export const UserRoutines = () => {
         if(store.privateRes === true){
             navigate('/')
         }
-
-    
         
     }, [store.privateRes])
 
@@ -35,9 +33,7 @@ export const UserRoutines = () => {
                         <h1>arms: {store.routineData.arms}</h1>
                         <h1>shoulders: {store.routineData.shoulders}</h1>
 
-
-                    </div>
-                    
+                    </div>           
             }
         </div>
 

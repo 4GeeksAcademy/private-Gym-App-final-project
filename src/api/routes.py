@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 import resend
 import os
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Trainer, Routines
+from api.models import db, User, Trainer, Routines, Diets
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -43,8 +43,8 @@ url_front = "https://potential-journey-wrg5rvjrj543vj7-3000.app.github.dev/"
 @jwt_required()
 
 def all():
-    user_validation = get_jwt_identity()
     query = User.query.all()
+    
     all_users = [{
         'first_name': user.first_name,
         'last_name': user.last_name,
@@ -57,11 +57,34 @@ def all():
     } for user in query]
 
 
-    if len(all_users) == 0:
+    if len(all_users) == 0 :
         
-        return jsonify({'msg': 'no user in db :('})
+        return jsonify({'msg': 'no user in db :('}), 200
     
-    return jsonify(all_users)
+    return jsonify(all_users), 200
+
+
+@api.route('/get/diet/<int:id_user>', methods=['GET'])
+@jwt_required()
+def get_diet(id_user):
+    
+    query_diet = Diets.query.filter_by(id_user = id_user).first()
+    
+    if not query_diet:
+        return jsonify({'msg': 'this user not have diet assigned'}), 200
+    
+    return jsonify({
+        'breakfast': query_diet.breakfast,
+        'brunch': query_diet.brunch,
+        'lunch': query_diet.lunch,
+        'dinner': query_diet.dinner,
+        'supper': query_diet.supper,
+        'trainer_first_name': Trainer.query.filter_by(id = query_diet.id_trainer).first().first_name,
+        'trainer_last_name': Trainer.query.filter_by(id = query_diet.id_trainer).first().last_name
+
+
+
+    }), 200
 
 @api.route('/all/trainers', methods=['GET'])
 @jwt_required()
@@ -78,9 +101,9 @@ def all_trainers():
     } for trainer in query]
     if len(all_trainers) == 0:
         
-        return jsonify({'msg': 'no trainers in db :('})
+        return jsonify({'msg': 'no trainers in db :('}), 200
     
-    return jsonify(all_trainers)
+    return jsonify(all_trainers), 200
 
 
 
@@ -323,23 +346,31 @@ def create_trainer():
     return jsonify(ok_to_share), 200
 
 @api.route('/assign/routine', methods=['POST'])
+@jwt_required()
 def assign_routine():
-
+    
+    trainer = get_jwt_identity()
     chest = request.json.get('chest')
     shoulders = request.json.get('shoulders')
     arms = request.json.get('arms')
     legs = request.json.get('legs')
-   
+    id_user = request.json.get('id_user')
+
+    user_from_db = Routines.query.filter_by(id_user = id_user).first()
+
     if not chest or not shoulders or not arms or not legs:
         return jsonify({'msg': 'fill all inputs'}), 400    
     
+    if user_from_db :
+        return jsonify({'msg': 'user already have routine assigned'}), 400
+    
     new_routine = Routines(
-        Chest = request.json.get('chest'),
-        shoulders = request.json.get('shoulders'),
-        arms = request.json.get('arms'),
-        legs = request.json.get('legs'),
-        id_user = request.json.get('id_user'),
-        id_trainer = request.json.get('id_trainer')
+        Chest = chest,
+        shoulders = shoulders,
+        arms = arms,
+        legs = legs,
+        id_user = id_user,
+        id_trainer = trainer
         )
     db.session.add(new_routine)
     db.session.commit()
@@ -347,7 +378,7 @@ def assign_routine():
 
 @api.route('/get/routine', methods=['GET'])
 @jwt_required()
-def get_one_routine():
+def get_one_routine_user():
     user_validation = get_jwt_identity()
     user_from_db = User.query.get(user_validation)
 
@@ -376,7 +407,73 @@ def get_one_routine():
 
 
 
+@api.route('/routine/delete/<int:id>', methods=['DELETE'])
+def delete_routine(id):
+
+    routine_exist_db = Routines.query.filter_by(id_user = id).first()
+
+    if routine_exist_db :
+        db.session.delete(routine_exist_db)
+        db.session.commit()
+
+        return jsonify({
+            'msg': 'success'
+        }), 200
+    else:
+        return jsonify({
+           'msg': 'this user not have routines' 
+        }),500
+    
+@api.route('/diet/delete/<int:id>', methods=['DELETE'])
+def delete_diet(id):
+
+    diet_exist_db = Diets.query.filter_by(id_user = id).first()
+
+    if diet_exist_db :
+        db.session.delete(diet_exist_db)
+        db.session.commit()
+
+        return jsonify({
+            'msg': 'success'
+        }), 200
+    else:
+        return jsonify({
+           'msg': 'this user not have diet' 
+        }),500
 
 
+@api.route('/assign/diet', methods=['POST'])
+@jwt_required()
+def assign_diet():
+    
+    trainer = get_jwt_identity()
+    breakfast = request.json.get('breakfast')
+    brunch = request.json.get('brunch')
+    lunch = request.json.get('lunch')
+    dinner = request.json.get('dinner')
+    supper = request.json.get('supper')
+    id_user = request.json.get('id_user')
 
+    diet_from_db = Diets.query.filter_by(id_user = id_user).first()
+
+     
+    if not breakfast or not brunch or not lunch or not dinner or not supper:
+        return jsonify({'msg': 'fill all inputs'}), 400    
+    
+    if diet_from_db :
+        return jsonify({'msg': 'user already have diet assigned'}), 400
+    
+    new_diet = Diets(
+        id_trainer = trainer,
+        breakfast = breakfast,
+        brunch =  brunch,
+        lunch = lunch,
+        dinner = dinner,
+        supper = supper,
+        id_user = id_user
+        )
+    db.session.add(new_diet)
+    db.session.commit()
+
+    return jsonify({'msg': 'success'}), 200
 
