@@ -50,7 +50,7 @@ const User = () => {
                             </Link>
                         </div>
                         <div className={style.services__card}>
-                            <Link to="/user/diets">
+                            <Link to="/user/diet">
                                 <h2>Your Diets</h2>
                                 <p></p>
                             </Link>

@@ -73,7 +73,7 @@ export const TrainerAssignDiet = () => {
                                 <button onClick={() => setUserId(ele.id)} type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
                                     Assign Diet
                                 </button>
-                               <button onClick={() => actions.deleteDiet(ele.id)} type="button" className="btn btn-danger m-2" >
+                                <button onClick={() => actions.deleteDiet(ele.id)} type="button" className="btn btn-danger m-2" >
                                     Delete Diet
                                 </button>
 
@@ -93,21 +93,23 @@ export const TrainerAssignDiet = () => {
                     <div className="modal-content">
 
                         <div className="modal-header text-center">
-                            <h1 className=" fs-5 text-center" id="exampleModalLabel">Routine</h1>
+                            <h1 className=" fs-5 text-center" id="exampleModalLabel">Diet</h1>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 
                         {store.dietData.length == 0 ? <div class="d-flex justify-content-center"><div className="spinner-border m-5" role="status"></div> </div> :
-
-                            <div className="modal-body ">
-                                <h1>Routine assigned by: {store.dietData.trainer_first_name + " " + store.dietData.trainer_first_name}</h1>
-                                <h2>breakfast: {store.dietData.breakfast}</h2>
-                                <h2>breakfast: {store.dietData.brunch}</h2>
-                                <h2>breakfast: {store.dietData.lunch}</h2>
-                                <h2>breakfast: {store.dietData.dinner}</h2>
-                                <h2>breakfast: {store.dietData.supper}</h2>
-
+                            store.dietData.msg == "this user not have diet assigned" ? <div className="alert alert-warning m-3" role="alert">
+                                This user not have diet assigned
                             </div>
+                                : <div className="modal-body ">
+                                    <h1>Diet assigned by: {store.dietData.trainer_first_name + " " + store.dietData.trainer_first_name}</h1>
+                                    <h2>breakfast: {store.dietData.breakfast}</h2>
+                                    <h2>brunch: {store.dietData.brunch}</h2>
+                                    <h2>lunch: {store.dietData.lunch}</h2>
+                                    <h2>dinner: {store.dietData.dinner}</h2>
+                                    <h2>supper: {store.dietData.supper}</h2>
+
+                                </div>
                         }
                         <div className="modal-footer">
                             <button type="button" className=" w-100 btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -146,7 +148,6 @@ export const TrainerAssignDiet = () => {
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" placeholder="Last Name" value={supper} onChange={(e) => setSupper(e.target.value)} ></input>
                                     <label >Supper</label>
-                                    <h1>{userId}</h1>
                                 </div>
                             </div>
                             <div className="modal-footer">

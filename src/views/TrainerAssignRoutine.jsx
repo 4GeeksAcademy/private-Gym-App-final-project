@@ -23,7 +23,7 @@ export const TrainerAssignRoutine = () => {
             navigate('/')
         }
 
-    
+
 
     }, [store.privateRes])
 
@@ -52,7 +52,7 @@ export const TrainerAssignRoutine = () => {
     return (
 
         <div className="container ">
-            {store.setRoutineRes.length == 0 ? "" : <div className="alert alert-success col-12" role="alert">routine added successfully!!</div>}
+            
             {store.deleteRoutineMsg == "success" ? <div className="alert alert-success" role="alert">routine deleted!! </div> :
                 store.deleteRoutineMsg == "this user not have routines" ? <div className="alert alert-danger " role="alert">this user not have routines </div> : ""}
             <div className="d-flex">
@@ -67,27 +67,62 @@ export const TrainerAssignRoutine = () => {
                                 <h6 className="card-text"><b>Email:</b> {ele.email}</h6>
                                 <h6 className="card-text"><b>Since :</b> {ele.create_at}</h6>
 
-                                <button onClick={() => setUserId(ele.id)} type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
+                                <button onClick={() => setUserId(ele.id)} type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >
                                     Assign Routine
                                 </button>
                                 <button onClick={() => actions.deleteRoutine(ele.id)} type="button" className="btn btn-danger m-2" >
-                                    Delete routine
+                                    Delete Routine
+                                </button>
+                                <button onClick={() => actions.getOneRoutine(ele.id)} type="button" className="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    See Routine
                                 </button>
                             </div>
                         </div>
 
                     )}
             </div>
+
+            <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+
+                        <div className="modal-header text-center">
+                            <h1 className=" fs-5 text-center" id="exampleModalLabel">Routine</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                       
+                        {store.routineDataTrainer.length == 0 ? <div class="d-flex justify-content-center"><div className="spinner-border m-5" role="status"></div> </div> :
+                            store.routineDataTrainer.msg == "this user not have routine assigned" ? <div className="alert alert-warning m-3" role="alert">
+                                This user not have routine assigned
+                            </div>
+                                : <div className="modal-body ">
+                                    <h1>Routine assigned by: {store.routineDataTrainer.trainer_first_name + " " + store.routineDataTrainer.trainer_first_name}</h1>
+                                    <h2>Chest: {store.routineDataTrainer.Chest}</h2>
+                                    <h2>shoulders: {store.routineDataTrainer.shoulders}</h2>
+                                    <h2>arms: {store.routineDataTrainer.arms}</h2>
+                                    <h2>legs: {store.routineDataTrainer.legs}</h2>
+
+                                </div>
+                        }
+                        <div className="modal-footer">
+                            <button type="button" className=" w-100 btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {
+
                 <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                                <h1 className="modal-title fs-5" id="staticBackdropLabel">Assign Routine</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            
                             <div className="modal-body">
-
+                            {store.setRoutineRes.length == 0 ? "" : <div className="alert alert-success col-12 " role="alert">routine added successfully!!</div>}
                                 {msg.length == 0 ? "" : <div class="alert alert-danger" role="alert">{msg}</div>}
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" placeholder="Last Name" value={chest} onChange={(e) => setChest(e.target.value)} ></input>
@@ -104,7 +139,6 @@ export const TrainerAssignRoutine = () => {
                                 <div className="form-floating mb-3">
                                     <input type="text" className="form-control" placeholder="Last Name" value={shoulders} onChange={(e) => setShoulders(e.target.value)} ></input>
                                     <label >Shoulders exercises</label>
-                                    <h1>{userId}</h1>
                                 </div>
                             </div>
                             <div className="modal-footer">

@@ -19,6 +19,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			setDietRes: "",
 			deleteDietMsg: "",
 			dietData: "",
+			routineDataTrainer: "",
+			dietDataUser: "",
 		},
 		actions: {
 			logout: () => {
@@ -40,7 +42,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					deleteRoutineMsg: "",
 					setDietRes: "",
 					deleteDietMsg: "",
-					dietData: ""
+					dietData: "",
+					routineDataTrainer: "",
+					dietDataUser: "",
 				});
 
 			},
@@ -307,6 +311,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			},
+			getDiet: async () => {
+				const store = getStore()
+				await fetch(process.env.BACKEND_URL + "/api/get/diet", {
+					headers: {
+						Authorization: `Bearer ${sessionStorage.access_token}`
+					}
+				})
+					.then((res) => {
+						if (res.status == 200) { 
+							return res.json()
+						} else {
+							setStore({ store: store.privateRes = true })
+							throw Error(res.statusText)
+							
+						}
+					})
+					.then((json) => setStore({ store: store.dietDataUser = json }))
+
+
+
+			},
 			assignRoutine: async (routine)=> {
 				const store = getStore()
 				await fetch(process.env.BACKEND_URL + "/api/assign/routine", {
@@ -350,6 +375,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			getOneDiet : async (userId) =>{
 				const store = getStore()
+				setStore({store : store.dietData = ""})
 				await fetch(process.env.BACKEND_URL + `/api/get/diet/${userId}`, {
 					headers: {
 						Authorization: `Bearer ${sessionStorage.access_token}`
@@ -365,6 +391,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					})
 					.then((json) => setStore({ store: store.dietData = json }))
+
+			},
+			getOneRoutine : async (userId) =>{
+				const store = getStore()
+				setStore({store : store.routineDataTrainer = ""})
+				await fetch(process.env.BACKEND_URL + `/api/get/routine/${userId}`, {
+					headers: {
+						Authorization: `Bearer ${sessionStorage.access_token}`
+					}
+				})
+					.then((res) => {
+						if (res.status == 200) { 
+							return res.json()
+						} else {
+							setStore({ store: store.privateRes = true })
+							throw Error(res.statusText)
+							
+						}
+					})
+					.then((json) => setStore({ store: store.routineDataTrainer = json }))
 
 			},
 

@@ -18,6 +18,7 @@ import { Login } from "./pages/Login.jsx";
 import { TrainerLogin } from "./pages/TrainerLogin.jsx";
 import { SignUp } from "./pages/SignUp.jsx";
 import { UserRoutines } from "./pages/UserRoutines.jsx";
+import { UserDiet } from "./pages/UserDiet.jsx";
 
 
 //create your first component
@@ -43,6 +44,7 @@ const Layout = () => {
                         <Route element={<AdminUser />} path="/admin/users" />
                         <Route element={<AdminTrainer />} path="/admin/Trainer" />
                         <Route element={<UserRoutines />} path="/user/routine" />
+                        <Route element={<UserDiet />} path="/user/diet" />
                         <Route element={<TrainerHome />} path="/trainer" />   
                         <Route element={<TrainerAssignRoutine />} path="/trainer/assignroutine" />   
                         <Route element={<TrainerAssignDiet />} path="/trainer/assigndiet" />   

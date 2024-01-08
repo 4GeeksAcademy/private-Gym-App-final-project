@@ -82,7 +82,24 @@ def get_diet(id_user):
         'trainer_first_name': Trainer.query.filter_by(id = query_diet.id_trainer).first().first_name,
         'trainer_last_name': Trainer.query.filter_by(id = query_diet.id_trainer).first().last_name
 
+    }), 200
 
+@api.route('/get/routine/<int:id_user>', methods=['GET'])
+@jwt_required()
+def get_routine(id_user):
+    
+    query_routine = Routines.query.filter_by(id_user = id_user).first()
+    
+    if not query_routine:
+        return jsonify({'msg': 'this user not have routine assigned'}), 200
+    
+    return jsonify({
+        'Chest': query_routine.Chest,
+        'shoulders': query_routine.shoulders,
+        'arms': query_routine.arms,
+        'legs': query_routine.legs,
+        'trainer_first_name': Trainer.query.filter_by(id = query_routine.id_trainer).first().first_name,
+        'trainer_last_name': Trainer.query.filter_by(id = query_routine.id_trainer).first().last_name
 
     }), 200
 
@@ -405,6 +422,34 @@ def get_one_routine_user():
 
                     }), 200
 
+@api.route('/get/diet', methods=['GET'])
+@jwt_required()
+def get_one_diet_user():
+    user_validation = get_jwt_identity()
+    user_from_db = User.query.get(user_validation)
+
+    if not user_from_db:
+        return ({"msg": "user not exist"})
+
+    diet = Diets.query.filter_by(id_user = user_from_db.id).first()
+
+    if not diet:
+        return jsonify({
+                        "msg": "no diet yet"
+                        }), 200
+
+    return jsonify({
+                    "breakfast": diet.breakfast,
+                    "trainer_first_name": Trainer.query.filter_by(id = diet.id_trainer).first().first_name,
+                    "trainer_last_name": Trainer.query.filter_by(id = diet.id_trainer).first().last_name,
+                    "brunch": diet.brunch,
+                    "lunch": diet.lunch,
+                    "dinner": diet.dinner,
+                    "supper": diet.supper,
+                    "msg": "success",
+                    
+
+                    }), 200
 
 
 @api.route('/routine/delete/<int:id>', methods=['DELETE'])
